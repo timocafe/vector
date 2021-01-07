@@ -43,7 +43,10 @@ public:
   ///
   explicit vector(size_type n = 0, const value_type &v = value_type())
       : data_(nullptr), size_(n), shared_(false) {
-    cudaMallocManaged(&data_, n * sizeof(value_type));
+    cudaError_t error = cudaMallocManaged(&data_, n * sizeof(value_type));
+    if (error != cudaSuccess)
+      std::cout << " Error memory allocation ! \n";
+    // cudaDeviceSynchronize(); needed for Jetson and K80 - Kepler
     std::fill(begin(), end(), v);
   }
 
@@ -129,7 +132,7 @@ public:
   /// \brief Return the memory allocated
   ///
   size_type memory_allocated() const { return sizeof(T) * size_; }
-  
+
   ///
   //
   /// \brief Prefetch data on the gpu
