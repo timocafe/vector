@@ -23,8 +23,12 @@ The first think is to allocate memory using CUDA unify. First the basic construc
 ```cpp
   explicit vector(size_type n = 0, const value_type &v = value_type())
       : data_(nullptr), size_(n), shared_(false) { // shared is false
-    cudaMallocManaged(&data_, n * sizeof(value_type)); // all the magic is here !
-    std::fill(begin(), end(), v); // CPU - STL compatibility
+    cudaError_t error = cudaMallocManaged(&data_, n * sizeof(value_type));
+    if (error != cudaSuccess)
+      std::cout << " Error memory allocation ! \n";
+    // cudaDeviceSynchronize(); needed for Jetson and K80 - Kepler
+    std::fill(begin(), end(), v);
+  }
   }
 ```
 
