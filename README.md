@@ -29,7 +29,6 @@ The first think is to allocate memory using CUDA unify. First the basic construc
     // cudaDeviceSynchronize(); needed for Jetson and K80 - Kepler
     std::fill(begin(), end(), v);
   }
-  }
 ```
 
 Second a copy constructor which will be called only when we start a CUDA kernel. The object coming from this constructor
